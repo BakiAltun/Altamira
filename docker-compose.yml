@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:  
+  web:
+    image: webapi:latest
+    depends_on:
+      - "redis_image"
+      - "db"
+    build:
+      context: .
+      dockerfile: src/Presentation/Web/Api/Dockerfile
+    ports:
+      - "9901:80"
+    links:
+      - "redis_image"
+      - "db"
+
+  redis_image:
+    image: redis
+    container_name: cache
+    ports:
+      - "6379:6379"
+
+  db:
+    image: "mcr.microsoft.com/mssql/server" 
+    container_name: dbserver
+    ports:
+      - "1433:1433"
+    environment:
+        SA_PASSWORD: "XYZ123**xyz"
+        ACCEPT_EULA: "Y" 
